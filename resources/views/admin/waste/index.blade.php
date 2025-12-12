@@ -3,7 +3,10 @@
         <div
             class="flex justify-between items-center bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-6 py-4">
             <div class="">
-                <h2 class="font-semibold text-xl text-white leading-tight">
+                <x-breadcrumb :items="[
+                    ['label' => 'Waste'],
+                ]" />
+                <h2 class="font-semibold text-xl text-gray-900 leading-tight">
                     {{ __('Waste Management') }}
                 </h2>
                 <span class="text-sm text-gray-400">
@@ -31,7 +34,7 @@
                     <ul class="flex flex-wrap-mb-px text-sm font-medium text-center">
                         <li class="mr-2">
                             <a href="{{ route('admin.waste.index') }}"
-                                class="inline-block p-4 {{ !request('category') ? 'text-green-600 border-b-2 border-green-600' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
+                                class="inline-block p-4 {{ !request('category') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
                                 All Waste
                             </a>
                         </li>
@@ -43,13 +46,13 @@
                         </li>
                         <li class="mr-2">
                             <a href="{{ route('admin.waste.index', ['category' => 'anorganik']) }}"
-                                class="inline-block p-4 {{ request('category') == 'anorganik' ? 'text-green-600 border-b-2 border-green-600' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
+                                class="inline-block p-4 {{ request('category') == 'anorganik' ? 'text-yellow-500 border-b-2 border-yellow-500' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
                                 Anorganik
                             </a>
                         </li>
                         <li class="mr-2">
                             <a href="{{ route('admin.waste.index', ['category' => 'b3']) }}"
-                                class="inline-block p-4 {{ request('category') == 'b3' ? 'text-green-600 border-b-2 border-green-600' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
+                                class="inline-block p-4 {{ request('category') == 'b3' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
                                 B3
                             </a>
                         </li>
@@ -57,7 +60,7 @@
                 </div>
                 <div class="inline-flex items-center">
                     <a href="{{ route('admin.waste.create') }}"
-                        class="inline-flex items-center w-auto shrink-0 px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition font-extrabold">
+                        class="inline-flex items-center w-auto shrink-0 px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition font-extrabold">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
@@ -128,7 +131,7 @@
                                             </span>
                                         @elseif ($waste->category == 'anorganik')
                                             <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                 Anorganik
                                             </span>
                                         @else
@@ -160,8 +163,8 @@
                                         {{-- Edit --}}
                                         <a href="{{ route('admin.waste.edit', $waste->id) }}"
                                             class="inline-flex items-center px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 text-xs font-medium">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -209,7 +212,7 @@
                     <p class="mt-1 text-sm text-gray-500">Get started by creating a new waste item.</p>
                     <div class="mt-6">
                         <a href="{{ route('admin.waste.create') }}"
-                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 4v16m8-8H4"></path>

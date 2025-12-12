@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\WasteItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class WasteController extends Controller
 {
@@ -16,12 +17,12 @@ class WasteController extends Controller
         $query = WasteItem::query();
 
         // Filter by category if provided
-        if ($request->has('category') && in_array($request->category, ['anorganik','organik','b3'])) {
+        if ($request->has('category') && in_array($request->category, ['anorganik', 'organik', 'b3'])) {
             $query->where('category', $request->category);
         }
 
         $wastes = $query->latest()->paginate(10);
-
+        
         return view('admin.waste.index', compact('wastes'));
     }
 
@@ -30,7 +31,7 @@ class WasteController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.waste.create');
     }
 
     /**
@@ -38,7 +39,49 @@ class WasteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 1. Validasi input
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'category'    => 'required|in:organik,anorganik,b3',
+            'description' => 'nullable|string',
+            'composition' => 'nullable|string',
+            'impact'      => 'nullable|string',
+            'handling'    => 'nullable|string',
+            'recycling'   => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // 2. Handle upload gambar
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            // generate nama unik
+            $filename = Str::uuid() . '.' . $request->file('image')->extension();
+
+            // simpan di folder public/waste_images
+            $imagePath = $request->file('image')->storeAs(
+                'waste_images',
+                $filename,
+                'public'
+            );
+        }
+
+        // 3. Simpan ke database
+        WasteItem::create([
+            'name'        => $validated['name'],
+            'category'    => $validated['category'],
+            'description' => $validated['description'] ?? null,
+            'composition' => $validated['composition'] ?? null,
+            'impact'      => $validated['impact'] ?? null,
+            'handling'    => $validated['handling'] ?? null,
+            'recycling'   => $validated['recycling'] ?? null,
+            'image_path'  => $imagePath ? 'storage/' . $imagePath : null,
+        ]);
+
+        // 4. Redirect dengan success message
+        return redirect()
+            ->route('admin.waste.index')
+            ->with('success', 'Waste item created successfully!');
     }
 
     /**
@@ -46,7 +89,7 @@ class WasteController extends Controller
      */
     public function show(WasteItem $wasteItem)
     {
-        //
+        
     }
 
     /**
