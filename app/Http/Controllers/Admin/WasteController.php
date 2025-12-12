@@ -11,9 +11,18 @@ class WasteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = WasteItem::query();
+
+        // Filter by category if provided
+        if ($request->has('category') && in_array($request->category, ['anorganik','organik','b3'])) {
+            $query->where('category', $request->category);
+        }
+
+        $wastes = $query->latest()->paginate(10);
+
+        return view('admin.waste.index', compact('wastes'));
     }
 
     /**

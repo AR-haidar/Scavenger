@@ -32,6 +32,5 @@ class UserSeeder extends Seeder
             'usertype' => 'user',
         ]);
 
-        User::factory()->count(10)->create(['usertype','user']);
     }
 }
