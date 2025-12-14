@@ -4,13 +4,13 @@
             class="flex justify-between items-center bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-6 py-4">
             <div class="">
                 <x-breadcrumb :items="[
-                    ['label' => 'Waste'],
+                    ['label' => 'Sampah'],
                 ]" />
                 <h2 class="font-semibold text-xl text-gray-900 leading-tight">
-                    {{ __('Waste Management') }}
+                    {{ __('Data Sampah') }}
                 </h2>
                 <span class="text-sm text-gray-400">
-                    Total: <strong>{{ $wastes->total() }}</strong> items
+                    Total: <strong>{{ $wastes->total() }}</strong> Data
                 </span>
             </div>
 
@@ -35,7 +35,7 @@
                         <li class="mr-2">
                             <a href="{{ route('admin.waste.index') }}"
                                 class="inline-block p-4 {{ !request('category') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-600 hover:border-gray-300' }}">
-                                All Waste
+                                Semua
                             </a>
                         </li>
                         <li class="mr-2">
@@ -64,7 +64,7 @@
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        ADD
+                        Tambah
                     </a>
                 </div>
 
@@ -80,16 +80,16 @@
 
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
-                                    Name
+                                    Nama
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
-                                    Category
+                                    Kategori
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
-                                    Description
+                                    Deskripsi
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
-                                    Action
+                                    Aksi
                                 </th>
                             </tr>
                         </thead>
@@ -102,7 +102,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="inlie-flex items-center">
                                             @if ($waste->image_path)
-                                                <img src="{{ asset($waste->image_path) }}"
+                                                <img src="{{ asset('storage/'. $waste->image_path) }}"
                                                     class="h-32 w-32 rounded object-cover mr-3">
                                             @else
                                                 <div
@@ -157,7 +157,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
-                                            Show
+                                            Detail
                                         </a>
 
                                         {{-- Edit --}}
@@ -185,7 +185,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
-                                                Delete
+                                                Hapus
                                             </button>
                                         </form>
                                     </td>
@@ -208,8 +208,8 @@
                             d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
                         </path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No waste items</h3>
-                    <p class="mt-1 text-sm text-gray-500">Get started by creating a new waste item.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Tidak ada data sampah</h3>
+                    <p class="mt-1 text-sm text-gray-500">Mulai dengan membuat data sampah baru</p>
                     <div class="mt-6">
                         <a href="{{ route('admin.waste.create') }}"
                             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -217,7 +217,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 4v16m8-8H4"></path>
                             </svg>
-                            Add New Waste
+                            Add sampah baru
                         </a>
                     </div>
                 </div>
