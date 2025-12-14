@@ -3,16 +3,13 @@
         <div
             class="flex justify-between items-center bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-6 py-4">
             <div>
-                <x-breadcrumb :items="[
-                    ['label' => 'Waste', 'url' => route('admin.waste.index')],
-                    ['label' => 'Create'],
-                ]" />
+                <x-breadcrumb :items="[['label' => 'Sampah', 'url' => route('admin.waste.index')], ['label' => 'Tambah']]" />
 
                 <h2 class="font-semibold text-xl text-gray-900 leading-tight">
-                    {{ __('Add New Waste Item') }}
+                    {{ __('Tambah Item Sampah Baru') }}
                 </h2>
                 <span class="text-sm text-gray-400">
-                    Create a new waste item entry
+                    Buat entri item sampah baru
                 </span>
             </div>
             <a href="{{ route('admin.waste.index') }}"
@@ -21,7 +18,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                BACK
+                KEMBALI
             </a>
         </div>
     </x-slot>
@@ -32,8 +29,8 @@
             <!-- Validation Errors -->
             @if ($errors->any())
                 <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                    <strong class="font-bold">Whoops!</strong>
-                    <span class="block sm:inline">There are some problems with your input.</span>
+                    <strong class="font-bold">Ups!</strong>
+                    <span class="block sm:inline">Ada beberapa masalah dengan input Anda.</span>
                     <ul class="mt-2 list-disc list-inside text-sm">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -52,11 +49,11 @@
                         <!-- Name -->
                         <div class="mb-6">
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                                Waste Name <span class="text-red-500">*</span>
+                                Nama Sampah <span class="text-red-500">*</span>
                             </label>
                             <input type="text" name="name" id="name" value="{{ old('name') }}"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('name') ? 'border-red-500' : 'border-gray-300' }}"
-                                placeholder="e.g., Botol Plastik PET" required>
+                                placeholder="contoh: Botol Plastik PET" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -65,21 +62,19 @@
                         <!-- Category -->
                         <div class="mb-6">
                             <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                                Category <span class="text-red-500">*</span>
+                                Kategori <span class="text-red-500">*</span>
                             </label>
                             <select name="category" id="category"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('category') ? 'border-red-500' : 'border-gray-300' }}"
                                 required>
-                                <option value="" disabled selected>Select Category</option>
+                                <option value="" disabled selected>Pilih Kategori</option>
                                 <option value="organik" {{ old('category') == 'organik' ? 'selected' : '' }}>Organik
                                 </option>
                                 <option value="anorganik" {{ old('category') == 'anorganik' ? 'selected' : '' }}>
                                     Anorganik
                                 </option>
                                 <option value="b3" {{ old('category') == 'b3' ? 'selected' : '' }}>B3 (Bahan
-                                    Berbahaya
-                                    &
-                                    Beracun)</option>
+                                    Berbahaya & Beracun)</option>
                             </select>
                             @error('category')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -89,11 +84,11 @@
                         <!-- Description -->
                         <div class="mb-6">
                             <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                                Description
+                                Deskripsi
                             </label>
                             <textarea name="description" id="description" rows="3"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('description') ? 'border-red-500' : 'border-gray-300' }}"
-                                placeholder="Brief description of the waste item">{{ old('description') }}</textarea>
+                                placeholder="Deskripsi singkat tentang item sampah">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -102,11 +97,11 @@
                         <!-- Composition -->
                         <div class="mb-6">
                             <label for="composition" class="block text-sm font-medium text-gray-700 mb-2">
-                                Composition / Material
+                                Komposisi / Material
                             </label>
                             <textarea name="composition" id="composition" rows="2"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('composition') ? 'border-red-500' : 'border-gray-300' }}"
-                                placeholder="e.g., PET (Polyethylene Terephthalate)">{{ old('composition') }}</textarea>
+                                placeholder="contoh: PET (Polyethylene Terephthalate)">{{ old('composition') }}</textarea>
                             @error('composition')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -115,11 +110,11 @@
                         <!-- Environmental Impact -->
                         <div class="mb-6">
                             <label for="impact" class="block text-sm font-medium text-gray-700 mb-2">
-                                Environmental Impact
+                                Dampak Lingkungan
                             </label>
                             <textarea name="impact" id="impact" rows="3"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('impact') ? 'border-red-500' : 'border-gray-300' }}"
-                                placeholder="Describe the environmental impact if not managed properly">{{ old('impact') }}</textarea>
+                                placeholder="Jelaskan dampak lingkungan jika tidak dikelola dengan baik">{{ old('impact') }}</textarea>
                             @error('impact')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -128,11 +123,11 @@
                         <!-- Handling Recommendation -->
                         <div class="mb-6">
                             <label for="handling" class="block text-sm font-medium text-gray-700 mb-2">
-                                Handling Recommendation
+                                Rekomendasi Penanganan
                             </label>
                             <textarea name="handling" id="handling" rows="3"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('handling') ? 'border-red-500' : 'border-gray-300' }}"
-                                placeholder="How to properly handle and dispose this waste">{{ old('handling') }}</textarea>
+                                placeholder="Cara menangani dan membuang sampah ini dengan benar">{{ old('handling') }}</textarea>
                             @error('handling')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -141,11 +136,11 @@
                         <!-- Recycling Potential -->
                         <div class="mb-6">
                             <label for="recycling" class="block text-sm font-medium text-gray-700 mb-2">
-                                Recycling Potential
+                                Potensi Daur Ulang
                             </label>
                             <textarea name="recycling" id="recycling" rows="2"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('recycling') ? 'border-red-500' : 'border-gray-300' }}"
-                                placeholder="What can this waste be recycled into?">{{ old('recycling') }}</textarea>
+                                placeholder="Sampah ini dapat didaur ulang menjadi apa?">{{ old('recycling') }}</textarea>
                             @error('recycling')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -156,7 +151,7 @@
                         <!-- Image Upload -->
                         <div class="mb-6">
                             <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
-                                Waste Image
+                                Gambar Sampah
                             </label>
 
                             <div class="mt-2 flex flex-col space-y-3">
@@ -169,7 +164,7 @@
 
                                 <!-- FORMAT INFO -->
                                 <p class="text-xs text-gray-500">
-                                    JPG, JPEG, PNG — Max 2MB
+                                    JPG, JPEG, PNG — Maksimal 2MB
                                 </p>
 
                                 <!-- BUTTON -->
@@ -181,7 +176,7 @@
                                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    Choose Image
+                                    Pilih Gambar
                                 </label>
 
                                 <input type="file" name="image" id="image"
@@ -202,7 +197,7 @@
                 <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
                     <a href="{{ route('admin.waste.index') }}"
                         class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 text-sm font-medium">
-                        Cancel
+                        Batal
                     </a>
                     <button type="submit"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-extrabold">
@@ -210,7 +205,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
                             </path>
                         </svg>
-                        CREATE WASTE ITEM
+                        BUAT ITEM SAMPAH
                     </button>
                 </div>
             </form>
