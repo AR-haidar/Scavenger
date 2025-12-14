@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\WasteItem;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class WasteController extends Controller
 {
@@ -22,7 +23,7 @@ class WasteController extends Controller
         }
 
         $wastes = $query->latest()->paginate(10);
-        
+
         return view('admin.waste.index', compact('wastes'));
     }
 
@@ -41,78 +42,113 @@ class WasteController extends Controller
     {
         // 1. Validasi input
         $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'category'    => 'required|in:organik,anorganik,b3',
+            'name' => 'required|string|max:255',
+            'category' => 'required|in:organik,anorganik,b3',
             'description' => 'nullable|string',
             'composition' => 'nullable|string',
-            'impact'      => 'nullable|string',
-            'handling'    => 'nullable|string',
-            'recycling'   => 'nullable|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'impact' => 'nullable|string',
+            'handling' => 'nullable|string',
+            'recycling' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // 2. Handle upload gambar
-        $imagePath = null;
-
+        // Handle image upload
         if ($request->hasFile('image')) {
-            // generate nama unik
-            $filename = Str::uuid() . '.' . $request->file('image')->extension();
+            $image = $request->file('image');
+            $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
 
-            // simpan di folder public/waste_images
-            $imagePath = $request->file('image')->storeAs(
-                'waste_images',
-                $filename,
-                'public'
-            );
+            // Store in storage/app/public/images/waste
+            $path = $image->storeAs('images/waste', $filename, 'public');
+
+            $validated['image_path'] = $path;
+            unset($validated['image']); // Remove 'image' key
         }
 
-        // 3. Simpan ke database
-        WasteItem::create([
-            'name'        => $validated['name'],
-            'category'    => $validated['category'],
-            'description' => $validated['description'] ?? null,
-            'composition' => $validated['composition'] ?? null,
-            'impact'      => $validated['impact'] ?? null,
-            'handling'    => $validated['handling'] ?? null,
-            'recycling'   => $validated['recycling'] ?? null,
-            'image_path'  => $imagePath ? 'storage/' . $imagePath : null,
-        ]);
+        WasteItem::create($validated);
 
-        // 4. Redirect dengan success message
         return redirect()
             ->route('admin.waste.index')
-            ->with('success', 'Waste item created successfully!');
+            ->with('success', 'Item sampah berhasil ditambahkan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(WasteItem $wasteItem)
+    public function show($id)
     {
-        
+        $waste = WasteItem::findOrFail($id);
+
+        return view('admin.waste.show', compact('waste'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(WasteItem $wasteItem)
+    public function edit($id)
     {
-        //
+        $waste = WasteItem::findOrFail($id);
+
+        return view('admin.waste.edit', compact('waste'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, WasteItem $wasteItem)
+    public function update(Request $request, $id)
     {
-        //
+        $waste = WasteItem::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|in:organik,anorganik,b3',
+            'description' => 'nullable|string',
+            'composition' => 'nullable|string',
+            'impact' => 'nullable|string',
+            'handling' => 'nullable|string',
+            'recycling' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($waste->image_path) {
+                Storage::disk('public')->delete($waste->image_path);
+            }
+
+            $image = $request->file('image');
+            $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+
+            // Store in storage/app/public/images/waste
+            $path = $image->storeAs('images/waste', $filename, 'public');
+
+            $validated['image_path'] = $path;
+            unset($validated['image']); // Remove 'image' key
+        }
+
+        $waste->update($validated);
+
+        return redirect()
+            ->route('admin.waste.index')
+            ->with('success', 'Item sampah berhasil diperbarui!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(WasteItem $wasteItem)
+    public function destroy($id)
     {
-        //
+        $waste = WasteItem::findOrFail($id);
+
+        // Delete image if exists
+        if ($waste->image_path && file_exists(public_path($waste->image_path))) {
+            unlink(public_path($waste->image_path));
+        }
+
+        $waste->delete();
+
+        return redirect()
+            ->route('admin.waste.index')
+            ->with('success', 'Item sampah berhasil dihapus!');
     }
 }
