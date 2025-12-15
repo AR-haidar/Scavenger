@@ -14,7 +14,7 @@
             @csrf
 
             <div>
-                <x-primary-button>
+                <x-primary-button class=" bg-[#4dcab1] hover:bg-[#349e89]">
                     {{ __('Resend Verification Email') }}
                 </x-primary-button>
             </div>
