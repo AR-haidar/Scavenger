@@ -15,8 +15,11 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.waste.index')" :active="request()->routeIs('dashboard')">
-                        {{ __('Kelola Sampah') }}
+                    <x-nav-link :href="route('admin.waste.index')" :active="request()->routeIs('admin.waste')">
+                        {{ __('Data Sampah') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.ai.index')" :active="request()->routeIs('admin.ai')">
+                        {{ __('Klasifikasi AI') }}
                     </x-nav-link>
                 </div>
             </div>
