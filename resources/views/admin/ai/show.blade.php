@@ -3,16 +3,16 @@
         <div
             class="flex justify-between items-center bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-6 py-4">
             <div>
-                <x-breadcrumb :items="[['label' => 'Sampah', 'url' => route('admin.waste.index')], ['label' => 'Detail']]" />
+                <x-breadcrumb :items="[['label' => 'Klasifikasi AI', 'url' => route('admin.ai.index')], ['label' => 'Detail']]" />
 
                 <h2 class="font-semibold text-xl text-gray-900 leading-tight">
-                    {{ __('Detail Item Sampah') }}
+                    {{ __('Detail Klasifikasi AI') }}
                 </h2>
                 <span class="text-sm text-gray-400">
-                    Informasi lengkap mengenai item sampah
+                    Informasi lengkap hasil klasifikasi AI
                 </span>
             </div>
-            <a href="{{ route('admin.waste.index') }}"
+            <a href="{{ route('admin.ai.index') }}"
                 class="inline-flex items-center px-3 py-1.5 border border-gray-400 text-gray-500 text-sm rounded hover:bg-gray-300 hover:text-white hover:border-none transition font-extrabold">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -30,10 +30,11 @@
 
                 <!-- IMAGE -->
                 <div>
-                    <div>
-                        @if ($waste->image_path)
-                            <img src="{{ asset('storage/' . $waste->image_path) }}" alt="{{ $waste->name }}"
-                                class="w-full aspect-square object-cover rounded-lg border border-gray-300">
+                    <div class="">
+                        @if ($data->input_text)
+                            <img src="{{ asset('storage/' . $data->input_text) }}" alt="{{ $data->input_text }}"
+                                class="w-full aspect-square object-cover rounded-lg border border-gray-300"
+                                alt="">
                         @else
                             <div
                                 class="w-full aspect-square flex items-center justify-center rounded-lg border border-dashed border-gray-300 text-gray-400">
@@ -42,6 +43,11 @@
                         @endif
                     </div>
                     <div class="flex flex-col text-sm text-gray-400 space-y-1 mt-2">
+                        <div class="flex items-center gap-1.5 text-gray-800">
+                            <span>
+                                Input dari: <strong>{{ $data->user->name }}</strong>
+                            </span>
+                        </div>
                         <div class="flex items-center gap-1.5">
                             <!-- ICON CLOCK -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none"
@@ -51,7 +57,7 @@
                             </svg>
 
                             <span>
-                                Dibuat: {{ $waste->created_at->translatedFormat('d F Y') }}
+                                Dibuat: {{ $data->created_at->translatedFormat('d F Y') }}
                             </span>
                         </div>
 
@@ -64,9 +70,10 @@
                             </svg>
 
                             <span>
-                                Diperbarui: {{ $waste->updated_at->translatedFormat('d F Y') }}
+                                Diperbarui: {{ $data->updated_at->translatedFormat('d F Y') }}
                             </span>
                         </div>
+
                     </div>
                 </div>
 
@@ -75,82 +82,38 @@
 
                     <!-- NAME & CATEGORY -->
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                            {{ $waste->name }}
-                        </h1>
-                        @if ($waste->category == 'organik')
+                        @if ($data->category == 'organik')
                             <span
                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-800">
-                                {{ strtoupper($waste->category) }}
+                                {{ strtoupper($data->category) }}
                             </span>
-                        @elseif ($waste->category == 'anorganik')
+                        @elseif ($data->category == 'anorganik')
                             <span
                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-yellow-100 text-yellow-800">
-                                {{ strtoupper($waste->category) }}
+                                {{ strtoupper($data->category) }}
                             </span>
-                        @elseif ($waste->category == 'b3')
+                        @elseif ($data->category == 'b3')
                             <span
                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-red-100 text-red-800">
-                                {{ strtoupper($waste->category) }}
+                                {{ strtoupper($data->category) }}
                             </span>
                         @endif
                     </div>
 
                     <!-- DESCRIPTION -->
-                    @if ($waste->description)
+                    @if ($data->result_description)
                         <div>
                             <h3 class="text-sm font-semibold text-gray-700 mb-1">Deskripsi</h3>
                             <p class="text-gray-600 leading-relaxed">
-                                {{ $waste->description }}
+                                {{ $data->result_description }}
                             </p>
                         </div>
                     @endif
-
-                    <!-- COMPOSITION -->
-                    @if ($waste->composition)
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Komposisi / Material</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                {{ $waste->composition }}
-                            </p>
-                        </div>
-                    @endif
-
-                    <!-- IMPACT -->
-                    @if ($waste->impact)
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Dampak Lingkungan</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                {{ $waste->impact }}
-                            </p>
-                        </div>
-                    @endif
-
-                    <!-- HANDLING -->
-                    @if ($waste->handling)
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Rekomendasi Penanganan</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                {{ $waste->handling }}
-                            </p>
-                        </div>
-                    @endif
-
-                    <!-- RECYCLING -->
-                    @if ($waste->recycling)
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Potensi Daur Ulang</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                {{ $waste->recycling }}
-                            </p>
-                        </div>
-                    @endif
-
                 </div>
             </div>
             <div class="flex justify-end border-t border-t-gray-300 mt-2 pt-2">
-                <form action="{{ route('admin.waste.destroy', $data->id) }}" method="POST"
-                    onsubmit="return confirm('Yakin hapus item ini?')" class="inline">
+                <form action="{{ route('admin.ai.destroy', $data->id) }}" method="POST"
+                    onsubmit="return confirm('Yakin hapus data ini?')" class="inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
