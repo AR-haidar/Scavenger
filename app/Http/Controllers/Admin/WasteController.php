@@ -17,12 +17,25 @@ class WasteController extends Controller
     {
         $query = WasteItem::query();
 
-        // Filter by category if provided
+        // Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhere('composition', 'like', '%' . $search . '%')
+                    ->orWhere('impact', 'like', '%' . $search . '%')
+                    ->orWhere('handling', 'like', '%' . $search . '%')
+                    ->orWhere('recycling', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Filter by category
         if ($request->has('category') && in_array($request->category, ['anorganik', 'organik', 'b3'])) {
             $query->where('category', $request->category);
         }
 
-        $wastes = $query->latest()->paginate(10);
+        $wastes = $query->latest()->paginate(10)->appends($request->query());
 
         return view('admin.waste.index', compact('wastes'));
     }
