@@ -149,7 +149,7 @@
                 </div>
             </div>
             <div class="flex justify-end border-t border-t-gray-300 mt-2 pt-2">
-                <form action="{{ route('admin.waste.destroy', $data->id) }}" method="POST"
+                <form action="{{ route('admin.waste.destroy', $waste->id) }}" method="POST"
                     onsubmit="return confirm('Yakin hapus item ini?')" class="inline">
                     @csrf
                     @method('DELETE')

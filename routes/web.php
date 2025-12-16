@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\QuizController as AdminQuizController;
 use App\Http\Controllers\Admin\QuizQuestionController as AdminQuizQuestionController;
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Models\Quiz;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +38,7 @@ Route::get('/', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('landing-page');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -53,6 +55,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('ai', AdminAIController::class);
     Route::resource('quiz', AdminQuizController::class);
     Route::resource('quiz-question', AdminQuizQuestionController::class);
+});
+
+// User
+Route::middleware(['auth', 'verified'])->name('user.')->group(function () {
+    // Home
+    Route::get('/home', [UserController::class, 'index'])->name('home');
+    Route::get('/home/sampah-{kategori}', [UserController::class, 'sampah'])->name('sampah-kategori');
+
+    Route::resource('sampah', WasteController::class);
+    Route::resource('eksplorasi', AiController::class);
+    Route::resource('quiz', QuizController::class);
 });
 
 require __DIR__ . '/auth.php';
