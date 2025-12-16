@@ -183,7 +183,7 @@
 
                     <!-- GAMBAR -->
                     <div class="flex justify-center md:justify-end">
-                        <img src="/assets/landingPageCharacter.png" alt="Ilustrasi Edukasi Sampah"
+                        <img src="{{ asset('/assets/landingPageCharacter.png') }}" alt="Ilustrasi Edukasi Sampah"
                             class="w-64 sm:w-80 md:w-[420px] object-contain">
                     </div>
 
