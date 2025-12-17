@@ -8,15 +8,20 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="shortcut icon" href="{{ asset('assets/scavengerLogo-sm.png') }}" type="image/x-icon">
     <link rel="icon" type="image/png" href="{{ asset('assets/scavengerLogo-sm.png') }}">
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <style>
+        body {
+            overflow-x: hidden;
+        }
+
         .custom-shape-divider-bottom-1765790904 {
             position: absolute;
             bottom: 0;
@@ -46,18 +51,15 @@
         {{-- NAVIGATION BAR --}}
         <nav x-data="{ open: false }"
             class="sticky top-0 z-50 shadow-lg bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-            <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
-                        <!-- Logo -->
-                        <div class="shrink-0 flex items-center">
+                        <div class="shrink-0 flex items-center" data-aos="fade-down" data-aos-duration="800">
                             <a href="{{ url('/') }}">
                                 <x-application-logo class="block h-9 w-auto" />
                             </a>
                         </div>
 
-                        <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                             <x-nav-link :href="route('user.home')">
                                 {{ __('Home') }}
@@ -71,8 +73,7 @@
                         </div>
                     </div>
 
-                    <!-- Settings Dropdown -->
-                    <div class="hidden sm:flex sm:items-center sm:ms-6 gap-2">
+                    <div class="hidden sm:flex sm:items-center sm:ms-6 gap-2" data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">
                         <a href="{{ route('login') }}"
                             class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4DB6AC] focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                             Sign In
@@ -83,7 +84,6 @@
                         </a>
                     </div>
 
-                    <!-- Hamburger -->
                     <div class="-me-2 flex items-center sm:hidden">
                         <button @click="open = ! open"
                             class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
@@ -100,7 +100,6 @@
                 </div>
             </div>
 
-            <!-- Responsive Navigation Menu -->
             <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
                     <x-responsive-nav-link :href="route('user.home')">
@@ -114,7 +113,6 @@
                     </x-responsive-nav-link>
                 </div>
 
-                <!-- Responsive Settings Options -->
                 <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                     <div class="px-4">
                         <div class="font-medium text-base text-gray-800 dark:text-gray-200">
@@ -128,21 +126,18 @@
         </nav>
 
 
-        <!-- Page Heading -->
         @if (isset($header))
             <header class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 {{ $header }}
             </header>
         @endif
 
-        <!-- Page Content -->
         <main>
             <section class="bg-[#4DB6AC]">
                 <div
                     class="min-h-screen max-w-7xl mx-auto px-6 py-16 md:py-0 grid grid-cols-1 md:grid-cols-2 items-center gap-12">
 
-                    <!-- TEKS -->
-                    <div class="text-white text-center md:text-left">
+                    <div class="text-white text-center md:text-left" data-aos="fade-right" data-aos-duration="1000">
                         <h1
                             class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight max-w-xl mx-auto md:mx-0">
                             Kenali Sampahmu,
@@ -150,14 +145,14 @@
                             Selamatkan Bumi
                         </h1>
 
-                        <p class="mt-5 text-base sm:text-lg text-white/90 max-w-md mx-auto md:mx-0">
+                        <p class="mt-5 text-base sm:text-lg text-white/90 max-w-md mx-auto md:mx-0" data-aos="fade-right" data-aos-delay="200" data-aos-duration="1000">
                             Platform edukasi pemilahan sampah berbasis kecerdasan buatan (AI)
                             untuk membantu kamu mengenali, memilah, dan mengelola sampah dengan benar.
                         </p>
 
-                        <div class="mt-8 flex justify-center md:justify-start">
+                        <div class="mt-8 flex justify-center md:justify-start" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
                             <a href="/home"
-                                class="inline-flex items-center px-7 py-3 bg-black text-white rounded-xl text-sm sm:text-base font-semibold hover:bg-gray-900 transition">
+                                class="inline-flex items-center px-7 py-3 bg-black text-white rounded-xl text-sm sm:text-base font-semibold hover:bg-gray-900 transition hover:scale-105 transform duration-300">
                                 Coba Sekarang
                                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -167,11 +162,10 @@
                         </div>
                     </div>
 
-                    <!-- GAMBAR -->
-                    <div class="flex justify-center md:justify-end">
+                    <div class="flex justify-center md:justify-end" data-aos="fade-left" data-aos-duration="1000">
                         <img src="{{ asset('/assets/landingPageCharacter.png') }}" alt="Ilustrasi Edukasi Sampah"
-                            class="w-64 sm:w-80 md:w-[420px] object-contain">
-                    </div>
+                            class="w-64 sm:w-80 md:w-[420px] object-contain drop-shadow-2xl animate-pulse">
+                            </div>
 
                 </div>
             </section>
@@ -191,11 +185,11 @@
                     </svg>
                 </div>
             </section>
+
             <section class="py-20 bg-gray-100">
                 <div class="max-w-7xl mx-auto px-6">
 
-                    <!-- Header Section -->
-                    <div class="text-center mb-16">
+                    <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000">
                         <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
                             Belajar Memilah Sampah <br class="hidden sm:block">
                             <span class="text-[#4DB6AC]">Semudah 1-2-3</span>
@@ -206,14 +200,11 @@
                         </p>
                     </div>
 
-                    <!-- Features Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
-                        <!-- Card 1: Pindai dan Kenali -->
-                        <div
-                            class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]">
+                        <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
+                             data-aos="fade-up" data-aos-delay="0" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
-                                <!-- Icon -->
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#4DB6AC] to-[#26A69A] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor"
@@ -223,7 +214,6 @@
                                     </svg>
                                 </div>
 
-                                <!-- Content -->
                                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Pindai dan Kenali</h3>
                                 <p class="text-gray-600 leading-relaxed">
                                     Dapatkan info instan mengenai jenis sampah dengan teknologi AI. Cukup upload foto
@@ -231,7 +221,6 @@
                                     penanganannya.
                                 </p>
 
-                                <!-- CTA Arrow -->
                                 <div
                                     class="mt-6 text-[#4DB6AC] font-semibold flex items-center group-hover:gap-2 transition-all">
                                     Coba Sekarang
@@ -244,11 +233,9 @@
                             </div>
                         </div>
 
-                        <!-- Card 2: Eksplorasi Informasi -->
-                        <div
-                            class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]">
+                        <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
+                             data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
-                                <!-- Icon -->
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#26A69A] to-[#00897B] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor"
@@ -258,14 +245,12 @@
                                     </svg>
                                 </div>
 
-                                <!-- Content -->
                                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Eksplorasi Informasi</h3>
                                 <p class="text-gray-600 leading-relaxed">
                                     Kenali jenis-jenis sampah dari kategori organik, anorganik, hingga B3. Pelajari
                                     komposisi, dampak lingkungan, dan potensi daur ulang dari setiap jenis sampah.
                                 </p>
 
-                                <!-- CTA Arrow -->
                                 <div
                                     class="mt-6 text-[#4DB6AC] font-semibold flex items-center group-hover:gap-2 transition-all">
                                     Jelajahi
@@ -278,11 +263,9 @@
                             </div>
                         </div>
 
-                        <!-- Card 3: Mainkan Kuis -->
-                        <div
-                            class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]">
+                        <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
+                             data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
-                                <!-- Icon -->
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#FF7043] to-[#F4511E] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor"
@@ -292,14 +275,12 @@
                                     </svg>
                                 </div>
 
-                                <!-- Content -->
                                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Mainkan Kuis</h3>
                                 <p class="text-gray-600 leading-relaxed">
                                     Uji pengetahuan kamu tentang pemilahan sampah dengan kuis interaktif. Dapatkan skor,
                                     lihat pembahasannya, dan tantang dirimu untuk menjadi ahli pengelolaan sampah!
                                 </p>
 
-                                <!-- CTA Arrow -->
                                 <div
                                     class="mt-6 text-[#4DB6AC] font-semibold flex items-center group-hover:gap-2 transition-all">
                                     Mulai Kuis
@@ -312,11 +293,9 @@
                             </div>
                         </div>
 
-                        <!-- Card 4: Artikel Edukasi -->
-                        <div
-                            class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]">
+                        <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
+                             data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
-                                <!-- Icon -->
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#5C6BC0] to-[#3949AB] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor"
@@ -326,14 +305,12 @@
                                     </svg>
                                 </div>
 
-                                <!-- Content -->
                                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Artikel Edukasi</h3>
                                 <p class="text-gray-600 leading-relaxed">
                                     Baca puluhan artikel terkini seputar lingkungan, tips pengelolaan sampah, dan kisah
                                     inspiratif. Tingkatkan wawasanmu dengan konten edukatif yang mudah dipahami.
                                 </p>
 
-                                <!-- CTA Arrow -->
                                 <div
                                     class="mt-6 text-[#4DB6AC] font-semibold flex items-center group-hover:gap-2 transition-all">
                                     Baca Artikel
@@ -352,8 +329,7 @@
             <section class="bg-gray-100 min-h-screen flex items-center px-6 py-16 lg:px-24">
                 <div class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
-                    <!-- KIRI: TEKS -->
-                    <div class="max-w-xl">
+                    <div class="max-w-xl" data-aos="fade-right" data-aos-duration="1000">
                         <span
                             class="inline-block mb-4 px-4 py-1 text-sm font-semibold rounded-full bg-gray-900 text-white">
                             Mini Quiz Edukasi
@@ -371,21 +347,19 @@
 
                         <div class="mt-10 flex flex-wrap gap-4">
                             <a href="#"
-                                class="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition">
+                                class="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition hover:scale-105 transform duration-300">
                                 Mulai Quiz
                             </a>
                         </div>
                     </div>
 
-                    <!-- KANAN: GAMBAR -->
-                    <div class="relative flex justify-center lg:justify-end">
+                    <div class="relative flex justify-center lg:justify-end" data-aos="zoom-in" data-aos-duration="1000">
                         <div class="relative">
-                            <!-- background subtle -->
-                            <div class="absolute -inset-6 rounded-full bg-[#4DB6AC]/20 blur-2xl"></div>
+                            <div class="absolute -inset-6 rounded-full bg-[#4DB6AC]/20 blur-2xl animate-pulse"></div>
 
                             <img src="{{ asset('assets/piala-landing-page.png') }}"
                                 alt="Ilustrasi piala dan elemen reward"
-                                class="relative w-72 sm:w-80 lg:w-96 drop-shadow-xl" />
+                                class="relative w-72 sm:w-80 lg:w-96 drop-shadow-xl hover:rotate-3 transition duration-500" />
                         </div>
                     </div>
 
@@ -393,10 +367,9 @@
             </section>
         </main>
 
-        <footer class="bg-black bg-opacity-90">
+        <footer class="bg-black bg-opacity-90" data-aos="fade-up" data-aos-offset="0">
             <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
 
-                <!-- Logo -->
                 <div class="flex items-center justify-center gap-2 w-full">
                     <img src="{{ asset('assets/scavengerLogo-footer.svg') }}" alt="Logo" class="h-6 w-auto">
                     <span class="text-sm text-gray-400">
@@ -408,6 +381,16 @@
         </footer>
 
     </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true, 
+            offset: 50, 
+            duration: 800, 
+            easing: 'ease-out-cubic', 
+        });
+    </script>
 </body>
 
 </html>
