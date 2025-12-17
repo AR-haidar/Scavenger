@@ -16,9 +16,25 @@ return new class extends Migration
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            $table->text('input_text'); // teks yang dimasukkan user
+            // Jenis input
+            $table->enum('input_type', ['image', 'text']);
+
+            // Input user
+            $table->text('input_text')->nullable();
+            $table->string('input_image_path')->nullable();
+
+            // Hasil AI (terstruktur)
+            $table->string('waste_name', 150);
             $table->enum('category', ['organik', 'anorganik', 'b3']);
-            $table->text('result_description')->nullable(); // penjelasan/hasil AI
+            $table->text('processing_suggestion');
+            $table->text('environmental_impact');
+
+            // Response mentah AI
+            $table->longText('raw_ai_response');
+
+            // Status proses
+            $table->enum('status', ['success', 'failed'])
+                ->default('success');
 
             $table->timestamps();
         });

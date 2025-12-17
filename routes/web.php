@@ -19,6 +19,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\Quiz;
 
+use Illuminate\Support\Facades\Http;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
