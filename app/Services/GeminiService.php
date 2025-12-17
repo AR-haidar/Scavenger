@@ -119,7 +119,7 @@ class GeminiService
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])
-            ->timeout(60)
+            ->timeout(120)
             ->post($this->baseUrl . '?key=' . $this->apiKey, $payload);
 
             if ($response->failed()) {

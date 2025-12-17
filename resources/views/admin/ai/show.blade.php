@@ -31,14 +31,14 @@
                 <!-- IMAGE -->
                 <div>
                     <div class="">
-                        @if ($data->input_text)
-                            <img src="{{ asset('storage/' . $data->input_text) }}" alt="{{ $data->input_text }}"
+                        @if ($data->input_type == 'image')
+                            <img src="{{ asset($data->input_image_path) }}" alt="{{ $data->input_waste_name }}"
                                 class="w-full aspect-square object-cover rounded-lg border border-gray-300"
                                 alt="">
                         @else
                             <div
                                 class="w-full aspect-square flex items-center justify-center rounded-lg border border-dashed border-gray-300 text-gray-400">
-                                Tidak ada gambar
+                                Input : {{ $data->input_text }}
                             </div>
                         @endif
                     </div>
@@ -79,6 +79,7 @@
 
                 <!-- DETAIL -->
                 <div class="lg:col-span-2 space-y-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-1">{{ $data->waste_name }}</h3>
 
                     <!-- NAME & CATEGORY -->
                     <div>
@@ -101,11 +102,27 @@
                     </div>
 
                     <!-- DESCRIPTION -->
-                    @if ($data->result_description)
+                    @if ($data->processing_suggestion)
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Deskripsi</h3>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Saran Pengolahan</h3>
                             <p class="text-gray-600 leading-relaxed">
-                                {{ $data->result_description }}
+                                {{ $data->processing_suggestion }}
+                            </p>
+                        </div>
+                    @endif
+                    @if ($data->environmental_impact)
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-1">Dampak Lingkungan</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ $data->environmental_impact }}
+                            </p>
+                        </div>
+                    @endif
+                    @if ($data->raw_ai_response)
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-1">JSON response</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ $data->raw_ai_response }}
                             </p>
                         </div>
                     @endif

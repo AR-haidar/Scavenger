@@ -34,6 +34,9 @@
         <!-- Page Content -->
         <main class="min-h-screen">
             @yield('content')
+            {{-- @if ($slot)
+                {{ $slot }}
+            @endif --}}
         </main>
 
         @include('user.layouts.footer')

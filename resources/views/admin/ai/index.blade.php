@@ -119,16 +119,16 @@
 
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
-                                    Inputan
+                                    Input User
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Nama Sampah
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
                                     User
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
                                     Kategori sampah
-                                </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
-                                    Deskripsi Hasil
                                 </th>
                                 <th scope="col" class="px-6 py-3 font-medium">
                                     Aksi
@@ -143,25 +143,22 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="inlie-flex items-center">
-                                            @if ($data->input_text)
-                                                <img src="{{ asset('storage/' . $data->input_text) }}"
+                                            @if ($data->input_type == 'image')
+                                                <img src="{{ asset($data->input_image_path) }}"
                                                     class="h-32 w-32 rounded object-cover mr-3"
-                                                    alt="{{ $data->input_text }}">
+                                                    alt="{{ $data->input_image_path }}">
                                             @else
-                                                <div
-                                                    class="h-32 w-32 rounded bg-gray-200 flex items-center justify-center">
-                                                    <svg class="h-6 w-6 text-gray-400" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                        </path>
-                                                    </svg>
+                                                <div class="text-sm text-gray-900 max-w-xs whitespace-normal">
+                                                    {{ $data->input_text }}
                                                 </div>
                                             @endif
                                         </div>
                                     </td>
-
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm text-gray-900 max-w-xs whitespace-normal">
+                                            {{ $data->waste_name }}
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4">
                                         <div class="text-sm text-gray-900 max-w-xs whitespace-normal">
                                             {{ $data->user->name }}
@@ -185,15 +182,7 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <div class="text-sm text-gray-900 max-w-xs whitespace-normal">
-                                            @if ($data->result_description)
-                                                {{ Str::limit($data->result_description, 100) }}
-                                            @else
-                                                -
-                                            @endif
-                                        </div>
-                                    </td>
+
                                     <td class="flex items-center px-6 py-4 space-x-3">
                                         {{-- Show --}}
                                         <a href="{{ route('admin.ai.show', $data->id) }}"
