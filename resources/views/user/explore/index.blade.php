@@ -1,129 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('user.layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>testing</title>
+@section('content')
+    <section class="py-12 bg-gray-50 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+            <!-- Header -->
+            <div class="mb-10">
+                <a href="{{ route('user.sampah.index') }}"
+                    class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-full text-sm font-semibold transition-colors shadow border border-gray-300 mb-2">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali
+                </a>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">AI Waste Scanner</h1>
+                <p class="text-lg text-gray-600">Identifikasi jenis sampah dan dapatkan panduan pengelolaan yang tepat</p>
+            </div>
+
+            <!-- Main Form Card -->
+            <div class="max-w-3xl mx-auto mb-8">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                    <form id="aiForm" class="space-y-6">
+                        @csrf
+
+                        <!-- Image Upload -->
+                        <div>
+                            <label class="block text-base font-semibold text-gray-900 mb-3">
+                                Upload Foto Sampah
+                            </label>
+                            <div class="relative">
+                                <input type="file" id="imageInput" name="image" accept="image/*" capture="environment"
+                                    class="hidden">
+                                <label for="imageInput"
+                                    class="block w-full h-56 md:aspect-square sm:aspect-square border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-[#4DB6AC] hover:bg-gray-50 transition-colors overflow-hidden">
+                                    <div id="uploadPlaceholder"
+                                        class="flex flex-col items-center justify-center w-full h-full">
+                                        <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <p class="text-sm text-gray-600 font-medium">Klik untuk pilih foto</p>
+                                        <p class="text-xs text-gray-500 mt-1">atau gunakan kamera</p>
+                                        <p class="text-xs text-gray-500 mt-1">PNG, JPG, JPEG (Max 5MB)</p>
+                                    </div>
+                                    <div id="imagePreview" class="hidden w-full h-full">
+                                        <img id="previewImg" src="" alt="Preview"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t-2 border-gray-200"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-white text-gray-500 font-medium">ATAU</span>
+                            </div>
+                        </div>
+
+                        <!-- Text Description -->
+                        <div>
+                            <label for="textInput" class="block text-md font-semibold text-gray-900 mb-3">
+                                Deskripsikan Sampah
+                            </label>
+                            <textarea id="textInput" name="text" rows="4"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#4DB6AC] focus:border-transparent resize-none"
+                                placeholder="Contoh: Kulit pisang busuk berwarna coklat"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="btnSubmit"
+                            class="w-full flex items-center justify-center px-6 py-3.5 bg-[#4DB6AC] text-white font-semibold rounded-xl hover:bg-[#26A69A] focus:outline-none focus:ring-4 focus:ring-[#4DB6AC]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <span id="btnText">Analisis Sekarang</span>
+                        </button>
+
+                        <!-- Loading State -->
+                        <div id="loadingState" class="hidden text-center py-4">
+                            <div class="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full">
+                                <svg class="animate-spin h-5 w-5 text-[#4DB6AC] mr-2" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <span class="text-sm font-medium text-gray-700">Sedang menganalisis...</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Result Section (Hidden by default) -->
+            <div id="resultSection" class="hidden max-w-3xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+
+                    <!-- Result Header -->
+                    <div class="bg-gradient-to-r from-[#4DB6AC] to-[#26A69A] px-8 py-6">
+                        <h2 class="text-2xl font-bold text-white">Hasil Analisis</h2>
+                    </div>
+
+                    <!-- Result Content -->
+                    <div class="p-8 space-y-6">
+
+                        <!-- Uploaded Image (if exists) -->
+                        <div id="resultImageContainer" class="hidden">
+                            <div
+                                class="w-full h-56 md:aspect-square sm:aspect-square overflow-hidden rounded-xl bg-gray-100">
+                                <img id="resultImage" src="" alt="Sampah" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Waste Name -->
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900" id="resName">-</h3>
+                        </div>
+
+                        <!-- Category Badge -->
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Kategori</span>
+                            <div class="mt-2">
+                                <span id="resCategory"
+                                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold">
+                                    -
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Environmental Impact -->
+                        <div class="pt-4 border-t border-gray-100">
+                            <h4 class="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                                <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Dampak Lingkungan
+                            </h4>
+                            <p class="text-gray-700 leading-relaxed" id="resImpact">-</p>
+                        </div>
+
+                        <!-- Processing Suggestion -->
+                        <div class="pt-4 border-t border-gray-100">
+                            <h4 class="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                                <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                                Saran Pengolahan
+                            </h4>
+                            <p class="text-gray-700 leading-relaxed" id="resSuggestion">-</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="pt-6 flex flex-col sm:flex-row gap-3">
+                            <button onclick="resetForm()"
+                                class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-colors">
+                                Analisis Lagi
+                            </button>
+                            <a href="{{ route('user.sampah.index') }}"
+                                class="flex-1 px-6 py-3 bg-[#4DB6AC] text-white font-semibold rounded-xl hover:bg-[#26A69A] transition-colors text-center">
+                                Jelajahi Kategori
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-    <style>
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            display: none;
-            /* Sembunyi dulu */
-            margin: 10px ;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .result-card {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .badge {
-            padding: 5px 10px;
-            border-radius: 4px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .bg-organik {
-            background-color: #2ecc71;
-        }
-
-        .bg-anorganik {
-            background-color: #f1c40f;
-            color: black;
-        }
-
-        .bg-b3 {
-            background-color: #e74c3c;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-        <h2>AI Waste Scanner 🤖</h2>
-
-        <form id="aiForm">
-            <div class="form-group">
-                <label>Upload Foto Sampah (Prioritas)</label>
-                <input type="file" id="imageInput" name="image" accept="image/*">
-            </div>
-
-            <p style="text-align: center; font-weight: bold; width: 300px">--- ATAU ---</p>
-
-            <div class="form-group">
-                <label>Deskripsikan Sampah</label>
-                <br>
-                <textarea id="textInput" name="text" rows="3" placeholder="Contoh: Kulit pisang busuk berwarna coklat"></textarea>
-            </div>
-
-            <button type="submit" id="btnSubmit">🔍 Analisis Sekarang</button>
-
-            <div id="loadingSpinner" class="loader"></div>
-        </form>
-
-        <div id="resultArea" class="result-card">
-            <h3>Hasil Analisis:</h3>
-
-            <p><strong>Nama Sampah:</strong> <span id="resName">-</span></p>
-
-            <p><strong>Kategori:</strong>
-                <span id="resCategory" class="badge">-</span>
-            </p>
-
-            <p><strong>Saran Pengolahan:</strong><br>
-                <span id="resSuggestion">-</span>
-            </p>
-
-            <p><strong>Dampak Lingkungan:</strong><br>
-                <span id="resImpact">-</span>
-            </p>
-        </div>
-    </div>
-
     <script>
+        // Image Preview
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('uploadPlaceholder').classList.add('hidden');
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form Submit
         document.getElementById('aiForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // 1. Tahan biar gak reload halaman
+            e.preventDefault();
 
-            // Ambil elemen
-            let formData = new FormData(this);
-            let btnSubmit = document.getElementById('btnSubmit');
-            let loading = document.getElementById('loadingSpinner');
-            let resultArea = document.getElementById('resultArea');
+            const formData = new FormData(this);
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnText = document.getElementById('btnText');
+            const loadingState = document.getElementById('loadingState');
+            const resultSection = document.getElementById('resultSection');
 
-            // Reset Tampilan
-            resultArea.style.display = 'none';
+            // UI State: Loading
             btnSubmit.disabled = true;
-            btnSubmit.innerText = 'Sedang Menganalisis...';
-            loading.style.display = 'block';
+            btnText.textContent = 'Menganalisis...';
+            loadingState.classList.remove('hidden');
+            resultSection.classList.add('hidden');
 
-            // 2. Kirim Request via Axios
+            // API Call
             axios.post('{{ route('user.eksplorasi.store') }}', formData, {
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
@@ -132,46 +223,70 @@
                     }
                 })
                 .then(function(response) {
-                    // 3. SUKSES (HTTP 200)
-                    let data = response.data.data; // Masuk ke object 'data' dari Controller
+                    const data = response.data.data;
 
-                    // Isi HTML dengan data dari AI
-                    document.getElementById('resName').innerText = data.waste_name;
-                    document.getElementById('resSuggestion').innerText = data.processing_suggestion;
-                    document.getElementById('resImpact').innerText = data.environmental_impact;
+                    // Populate Result
+                    document.getElementById('resName').textContent = data.waste_name;
+                    document.getElementById('resImpact').textContent = data.environmental_impact;
+                    document.getElementById('resSuggestion').textContent = data.processing_suggestion;
 
-                    // Atur warna badge kategori
-                    let badge = document.getElementById('resCategory');
-                    badge.innerText = data.category.toUpperCase();
+                    // Category Badge
+                    const badge = document.getElementById('resCategory');
+                    badge.textContent = data.category.toUpperCase();
+                    badge.className = 'inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold';
 
-                    // Reset class lama & tambah class baru sesuai kategori
-                    badge.className = 'badge';
-                    if (data.category.toLowerCase().includes('organik')) badge.classList.add('bg-organik');
-                    else if (data.category.toLowerCase().includes('b3')) badge.classList.add('bg-b3');
-                    else badge.classList.add('bg-anorganik');
-
-                    // Munculkan hasil
-                    resultArea.style.display = 'block';
-                })
-                .catch(function(error) {
-                    // 4. ERROR (HTTP 400/500)
-                    console.error(error);
-                    let msg = "Terjadi kesalahan.";
-
-                    if (error.response && error.response.data && error.response.data.message) {
-                        msg = error.response.data.message; // Pesan dari Controller lu
+                    if (data.category.toLowerCase().includes('organik')) {
+                        badge.classList.add('bg-green-100', 'text-green-800');
+                    } else if (data.category.toLowerCase().includes('b3')) {
+                        badge.classList.add('bg-red-100', 'text-red-800');
+                    } else {
+                        badge.classList.add('bg-blue-100', 'text-blue-800');
                     }
 
-                    alert("Gagal: " + msg);
+                    // Show uploaded image if exists
+                    const imageInput = document.getElementById('imageInput');
+                    if (imageInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('resultImage').src = e.target.result;
+                            document.getElementById('resultImageContainer').classList.remove('hidden');
+                        }
+                        reader.readAsDataURL(imageInput.files[0]);
+                    }
+
+                    // Show Result
+                    resultSection.classList.remove('hidden');
+                    resultSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    let msg = "Terjadi kesalahan saat menganalisis.";
+                    if (error.response && error.response.data && error.response.data.message) {
+                        msg = error.response.data.message;
+                    }
+                    alert(msg);
                 })
                 .finally(function() {
-                    // 5. FINISHING (Reset Tombol)
                     btnSubmit.disabled = false;
-                    btnSubmit.innerText = '🔍 Analisis Sekarang';
-                    loading.style.display = 'none';
+                    btnText.textContent = 'Analisis Sekarang';
+                    loadingState.classList.add('hidden');
                 });
         });
-    </script>
-</body>
 
-</html>
+        // Reset Form
+        function resetForm() {
+            document.getElementById('aiForm').reset();
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('resultImageContainer').classList.add('hidden');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+@endsection
