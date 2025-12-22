@@ -22,6 +22,17 @@
             overflow-x: hidden;
         }
 
+                /* Tambahkan ini di dalam <style> */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); } /* Bergerak ke atas 15px */
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite; /* Durasi 4 detik, loop selamanya */
+        }
+
         .custom-shape-divider-bottom-1765790904 {
             position: absolute;
             bottom: 0;
@@ -164,7 +175,7 @@
 
                     <div class="flex justify-center md:justify-end" data-aos="fade-left" data-aos-duration="1000">
                         <img src="{{ asset('/assets/landingPageCharacter.png') }}" alt="Ilustrasi Edukasi Sampah"
-                            class="w-64 sm:w-80 md:w-[420px] object-contain drop-shadow-2xl animate-pulse">
+                            class="w-64 sm:w-80 md:w-[420px] object-contain drop-shadow-2xl animate-float">
                             </div>
 
                 </div>
