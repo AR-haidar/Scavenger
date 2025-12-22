@@ -12,7 +12,8 @@ class WasteController extends Controller
      */
     public function index()
     {
-        //
+        return view('user.explore.explore');
+
     }
 
     /**
