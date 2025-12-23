@@ -25,6 +25,7 @@ return new class extends Migration
 
             // Hasil AI (terstruktur)
             $table->string('waste_name', 150);
+            $table->string('slug')->unique();
             $table->enum('category', ['organik', 'anorganik', 'b3']);
             $table->text('description')->nullable();
             $table->text('composition')->nullable();

@@ -32,7 +32,7 @@
                 {{-- Waste Item (Draggable) --}}
                 <div class="flex justify-center">
                     <div id="wasteItem" draggable="true"
-                        class="bg-white rounded-2xl shadow-lg p-8 cursor-move hover:shadow-xl transition-shadow border-4 border-transparent hover:border-blue-300 active:scale-95 transition-transform">
+                        class="bg-white rounded-2xl shadow-lg p-8 cursor-move hover:shadow-xl transition-shadow border-4 border-transparent hover:border-blue-300 active:scale-95">
                         <div class="text-center">
                             <div class="text-6xl mb-4" id="wasteIcon">🍌</div>
                             <div class="text-xl font-bold text-gray-900" id="wasteName">Kulit Pisang</div>
@@ -72,7 +72,7 @@
             </div>
 
             {{-- Game Over Modal --}}
-            <div id="gameOverModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div id="gameOverModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                 <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
                     <div class="text-6xl mb-4">🎉</div>
                     <h2 class="text-3xl font-bold text-gray-900 mb-2">Waktu Habis!</h2>

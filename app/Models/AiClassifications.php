@@ -15,15 +15,21 @@ class AiClassifications extends Model
         'input_text',
         'input_image_path',
         'waste_name',
+        'slug',
         'category',
-        'description',  
-        'composition',  
-        'handling',     
-        'recycling',    
+        'description',
+        'composition',
+        'handling',
+        'recycling',
         'impact',
         'raw_ai_response',
         'status',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function user()
     {

@@ -69,6 +69,7 @@ class WasteController extends Controller
 
         // 2. Tambahkan User ID yang sedang login
         $validated['user_id'] = Auth::id();
+        $validated['slug'] = Str::slug($validated['waste_name']) . '-' . time();
 
         // 3. Handle image upload & Input Type
         if ($request->hasFile('image')) {
@@ -135,6 +136,8 @@ class WasteController extends Controller
             'recycling' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        $validated['slug'] = Str::slug($validated['waste_name']) . '-' . time();
 
         // 2. Handle Image Upload
         if ($request->hasFile('image')) {

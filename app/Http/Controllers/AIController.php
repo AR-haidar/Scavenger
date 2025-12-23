@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\GeminiService;
-use App\Models\AiClassifications; // Pastikan Model sudah dibuat
+use App\Models\AiClassifications; 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -17,15 +18,16 @@ class AIController extends Controller
         $this->geminiService = $geminiService;
     }
 
-    public function index() {
+    public function index()
+    {
         return view('user.explore.scan');
     }
 
     public function store(Request $request)
     {
-        // 1. Validasi Input (Salah satu wajib diisi)
+        // ... (Validasi input sama seperti sebelumnya) ...
         $request->validate([
-            'image' => 'nullable|image|max:2048', // Max 2MB
+            'image' => 'nullable|image|max:2048',
             'text' => 'nullable|string|max:500',
         ]);
 
@@ -40,58 +42,58 @@ class AIController extends Controller
             $inputType = 'text';
             $aiResult = null;
 
-            // 2. Logika Prioritas: Gambar > Teks
+            // ... (Logika upload gambar & panggil service sama seperti sebelumnya) ...
             if ($request->hasFile('image')) {
                 $inputType = 'image';
                 $file = $request->file('image');
-
-                // Sesuaikan dengan pola controller lu: Nama file unik + Folder spesifik
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $path = $file->storeAs('images/ai_classification', $filename, 'public');
-
-                // Path untuk disimpan di DB agar bisa dipanggil di tag <img src="{{ asset(...) }}">
                 $imagePath = 'storage/' . $path;
-
-                // Path absolut untuk dibaca oleh Gemini Service
                 $absolutePath = storage_path('app/public/' . $path);
-
-                // Panggil Service
                 $aiResult = $this->geminiService->analyzeImage($absolutePath, $file->getMimeType());
             } else {
-                // Panggil Service Teks
                 $aiResult = $this->geminiService->analyzeText($request->input('text'));
             }
 
-            // 3. Cek apakah AI berhasil
+            // Cek hasil AI
             if (!$aiResult || empty($aiResult['data'])) {
                 return response()->json(['message' => 'Gagal menganalisis sampah. Coba lagi.'], 500);
             }
 
-            $data = $aiResult['data']; // Array bersih
-            $raw = $aiResult['raw'];   // String JSON mentah
+            $data = $aiResult['data'];
+            $raw = $aiResult['raw'];
 
-            // 4. Simpan ke Database (Sesuai struktur FINAL)
+            // --- TAMBAHAN LOGIC SLUG DISINI ---
+
+            // 1. Ambil nama sampah dari AI, atau pakai default
+            $finalWasteName = $data['waste_name'] ?? 'Tidak teridentifikasi';
+
+            // 2. Generate Slug dari nama tersebut + time() biar unik
+            $slug = Str::slug($finalWasteName) . '-' . time();
+
+            // ----------------------------------
+
+            // Simpan ke Database
             $classification = AiClassifications::create([
-                'user_id' => Auth::id(), // Asumsi user login
+                'user_id' => Auth::id(),
                 'input_type' => $inputType,
                 'input_text' => $request->input('text'),
                 'input_image_path' => $imagePath,
 
-                // Mapping hasil AI ke kolom
-                'waste_name' => $data['waste_name'] ?? 'Tidak teridentifikasi',
-                'category' => $data['category'] ?? 'anorganik', // Default fallback
+                'waste_name' => $finalWasteName, // Pakai variabel yang sudah kita set diatas
+                'slug' => $slug, // <--- MASUKKAN SLUG DISINI
+
+                'category' => $data['category'] ?? 'anorganik',
                 'description' => $data['description'] ?? '-',
                 'composition' => $data['composition'] ?? '-',
                 'handling' => $data['handling'] ?? '-',
                 'recycling' => $data['recycling'] ?? '-',
                 'impact' => $data['impact'] ?? '-',
-
                 'raw_ai_response' => $raw ?? '-',
             ]);
 
             DB::commit();
 
-            // 5. Return JSON ke Frontend (AJAX)
             return response()->json([
                 'status' => 'success',
                 'data' => $classification
@@ -100,7 +102,7 @@ class AIController extends Controller
             DB::rollBack();
             return response()->json([
                 'message' => 'Terjadi kesalahan server.',
-                'error' => $e->getMessage() // Matikan ini pas production
+                'error' => $e->getMessage()
             ], 500);
         }
     }
