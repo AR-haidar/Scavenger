@@ -31,8 +31,8 @@
                 <!-- IMAGE -->
                 <div>
                     <div>
-                        @if ($waste->image_path)
-                            <img src="{{ asset('storage/' . $waste->image_path) }}" alt="{{ $waste->name }}"
+                        @if ($waste->input_image_path)
+                            <img src="{{ asset($waste->input_image_path) }}" alt="{{ $waste->waste_name }}"
                                 class="w-full aspect-square object-cover rounded-lg border border-gray-300">
                         @else
                             <div

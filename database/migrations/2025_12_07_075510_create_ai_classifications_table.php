@@ -26,11 +26,14 @@ return new class extends Migration
             // Hasil AI (terstruktur)
             $table->string('waste_name', 150);
             $table->enum('category', ['organik', 'anorganik', 'b3']);
-            $table->text('processing_suggestion');
-            $table->text('environmental_impact');
+            $table->text('description')->nullable();
+            $table->text('composition')->nullable();
+            $table->text('handling')->nullable();
+            $table->text('recycling')->nullable();
+            $table->text('impact')->nullable();
 
             // Response mentah AI
-            $table->longText('raw_ai_response');
+            $table->longText('raw_ai_response')->nullable();
 
             // Status proses
             $table->enum('status', ['success', 'failed'])

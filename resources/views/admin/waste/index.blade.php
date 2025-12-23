@@ -152,8 +152,8 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="inlie-flex items-center">
-                                            @if ($waste->image_path)
-                                                <img src="{{ asset('storage/' . $waste->image_path) }}"
+                                            @if ($waste->input_image_path)
+                                                <img src="{{ asset($waste->input_image_path) }}"
                                                     class="h-32 w-32 rounded object-cover mr-3">
                                             @else
                                                 <div
@@ -169,7 +169,7 @@
                                             @endif
 
                                             <span class="text-gray-900 font-extrabold">
-                                                {{ $waste->name }}
+                                                {{ $waste->waste_name }}
                                             </span>
                                         </div>
                                     </td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WasteItem;
+use App\Models\AiClassifications;
 use Illuminate\Http\Request;
 
 class WasteController extends Controller
@@ -10,9 +11,42 @@ class WasteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('user.explore.explore');
+        $query = AiClassifications::query()
+        ->where('user_id', 1)
+        ->whereNotNull('input_image_path');
+
+        // Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('waste_name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhere('composition', 'like', '%' . $search . '%')
+                    ->orWhere('impact', 'like', '%' . $search . '%')
+                    ->orWhere('handling', 'like', '%' . $search . '%')
+                    ->orWhere('recycling', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Filter by category
+        if ($request->has('category') && in_array($request->category, ['anorganik', 'organik', 'b3'])) {
+            $query->where('category', $request->category);
+        }
+
+        $wastes = $query->latest()->paginate(10)->appends($request->query());
+
+        return view('user.explore.index',compact('wastes'));
+
+    }
+
+    /**
+     * Display a listing of the scanning waste.
+     */
+    public function scanner()
+    {
+        return view('user.explore.scan');
 
     }
 

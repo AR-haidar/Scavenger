@@ -16,8 +16,11 @@ class AiClassifications extends Model
         'input_image_path',
         'waste_name',
         'category',
-        'processing_suggestion',
-        'environmental_impact',
+        'description',  
+        'composition',  
+        'handling',     
+        'recycling',    
+        'impact',
         'raw_ai_response',
         'status',
     ];

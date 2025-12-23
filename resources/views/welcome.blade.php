@@ -22,15 +22,25 @@
             overflow-x: hidden;
         }
 
-                /* Tambahkan ini di dalam <style> */
+        /* Tambahkan ini di dalam <style> */
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); } /* Bergerak ke atas 15px */
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            /* Bergerak ke atas 15px */
+            100% {
+                transform: translateY(0px);
+            }
         }
 
         .animate-float {
-            animation: float 4s ease-in-out infinite; /* Durasi 4 detik, loop selamanya */
+            animation: float 4s ease-in-out infinite;
+            /* Durasi 4 detik, loop selamanya */
         }
 
         .custom-shape-divider-bottom-1765790904 {
@@ -84,7 +94,49 @@
                         </div>
                     </div>
 
-                    <div class="hidden sm:flex sm:items-center sm:ms-6 gap-2" data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">
+                    @auth
+                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                            <x-dropdown align="right" width="48">
+                                <x-slot name="trigger">
+                                    <button
+                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                        <div>@auth{{ Auth::user()->name }}@endauth
+                                        </div>
+
+                                        <div class="ms-1">
+                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <x-dropdown-link :href="route('profile.edit')">
+                                        {{ __('Profile') }}
+                                    </x-dropdown-link>
+
+                                    <!-- Authentication -->
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+
+                                        <x-dropdown-link :href="route('logout')"
+                                            onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                            {{ __('Log Out') }}
+                                        </x-dropdown-link>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                    @endauth
+
+                    @guest
+                    <div class="hidden sm:flex sm:items-center sm:ms-6 gap-2" data-aos="fade-down" data-aos-delay="200"
+                        data-aos-duration="800">
                         <a href="{{ route('login') }}"
                             class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4DB6AC] focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                             Sign In
@@ -94,6 +146,7 @@
                             Sign Up
                         </a>
                     </div>
+                    @endguest
 
                     <div class="-me-2 flex items-center sm:hidden">
                         <button @click="open = ! open"
@@ -156,13 +209,15 @@
                             Selamatkan Bumi
                         </h1>
 
-                        <p class="mt-5 text-base sm:text-lg text-white/90 max-w-md mx-auto md:mx-0" data-aos="fade-right" data-aos-delay="200" data-aos-duration="1000">
+                        <p class="mt-5 text-base sm:text-lg text-white/90 max-w-md mx-auto md:mx-0"
+                            data-aos="fade-right" data-aos-delay="200" data-aos-duration="1000">
                             Platform edukasi pemilahan sampah berbasis kecerdasan buatan (AI)
                             untuk membantu kamu mengenali, memilah, dan mengelola sampah dengan benar.
                         </p>
 
-                        <div class="mt-8 flex justify-center md:justify-start" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
-                            <a href="/home"
+                        <div class="mt-8 flex justify-center md:justify-start" data-aos="fade-up" data-aos-delay="400"
+                            data-aos-duration="1000">
+                            <a href="{{ route('user.eksplorasi.index') }}"
                                 class="inline-flex items-center px-7 py-3 bg-black text-white rounded-xl text-sm sm:text-base font-semibold hover:bg-gray-900 transition hover:scale-105 transform duration-300">
                                 Coba Sekarang
                                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,7 +231,7 @@
                     <div class="flex justify-center md:justify-end" data-aos="fade-left" data-aos-duration="1000">
                         <img src="{{ asset('/assets/landingPageCharacter.png') }}" alt="Ilustrasi Edukasi Sampah"
                             class="w-64 sm:w-80 md:w-[420px] object-contain drop-shadow-2xl animate-float">
-                            </div>
+                    </div>
 
                 </div>
             </section>
@@ -214,7 +269,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
                         <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
-                             data-aos="fade-up" data-aos-delay="0" data-aos-duration="800">
+                            data-aos="fade-up" data-aos-delay="0" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#4DB6AC] to-[#26A69A] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -245,7 +300,7 @@
                         </div>
 
                         <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
-                             data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+                            data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#26A69A] to-[#00897B] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -275,7 +330,7 @@
                         </div>
 
                         <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
-                             data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                            data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#FF7043] to-[#F4511E] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -305,7 +360,7 @@
                         </div>
 
                         <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#4DB6AC]"
-                             data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+                            data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
                             <div class="flex flex-col items-center text-center">
                                 <div
                                     class="w-20 h-20 bg-gradient-to-br from-[#5C6BC0] to-[#3949AB] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -357,14 +412,15 @@
                         </p>
 
                         <div class="mt-10 flex flex-wrap gap-4">
-                            <a href="#"
+                            <a href="{{ route('user.quiz.index') }}"
                                 class="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition hover:scale-105 transform duration-300">
                                 Mulai Quiz
                             </a>
                         </div>
                     </div>
 
-                    <div class="relative flex justify-center lg:justify-end" data-aos="zoom-in" data-aos-duration="1000">
+                    <div class="relative flex justify-center lg:justify-end" data-aos="zoom-in"
+                        data-aos-duration="1000">
                         <div class="relative">
                             <div class="absolute -inset-6 rounded-full bg-[#4DB6AC]/20 blur-2xl animate-pulse"></div>
 
@@ -396,10 +452,10 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({
-            once: true, 
-            offset: 50, 
-            duration: 800, 
-            easing: 'ease-out-cubic', 
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
         });
     </script>
 </body>

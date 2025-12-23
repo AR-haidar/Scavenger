@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 
 use App\Http\Controllers\WasteController;
 use App\Http\Controllers\AIController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizPlayController;
 use App\Http\Controllers\QuizQuestionController;
@@ -66,8 +67,17 @@ Route::middleware(['auth', 'verified'])->name('user.')->group(function () {
     Route::get('/home', [UserController::class, 'index'])->name('home');
     Route::get('/home/sampah-{kategori}', [UserController::class, 'sampah'])->name('sampah-kategori');
 
+    Route::get('sampah/scan', [WasteController::class, 'scanner'])->name('sampah.scanner');
     Route::resource('sampah', WasteController::class);
+
     Route::resource('eksplorasi', AiController::class);
+
+    Route::prefix('/quiz')->group(function () {
+        Route::get('/game', [GameController::class, 'index'])->name('game.index');
+        Route::post('/game/save-score', [GameController::class, 'saveScore'])->name('game.save-score');
+        Route::get('/game/leaderboard', [GameController::class, 'leaderboard'])->name('game.leaderboard');
+    });
+
     Route::resource('quiz', QuizController::class);
 });
 

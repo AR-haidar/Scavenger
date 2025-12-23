@@ -18,7 +18,7 @@ class AIController extends Controller
     }
 
     public function index() {
-        return view('user.explore.index');
+        return view('user.explore.scan');
     }
 
     public function store(Request $request)
@@ -80,10 +80,13 @@ class AIController extends Controller
                 // Mapping hasil AI ke kolom
                 'waste_name' => $data['waste_name'] ?? 'Tidak teridentifikasi',
                 'category' => $data['category'] ?? 'anorganik', // Default fallback
-                'processing_suggestion' => $data['processing_suggestion'] ?? '-',
-                'environmental_impact' => $data['environmental_impact'] ?? '-',
+                'description' => $data['description'] ?? '-',
+                'composition' => $data['composition'] ?? '-',
+                'handling' => $data['handling'] ?? '-',
+                'recycling' => $data['recycling'] ?? '-',
+                'impact' => $data['impact'] ?? '-',
 
-                'raw_ai_response' => $raw,
+                'raw_ai_response' => $raw ?? '-',
             ]);
 
             DB::commit();

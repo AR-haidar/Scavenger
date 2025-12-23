@@ -18,9 +18,6 @@
                     <x-nav-link :href="route('admin.waste.index')" :active="request()->routeIs('admin.waste')">
                         {{ __('Data Sampah') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.ai.index')" :active="request()->routeIs('admin.ai')">
-                        {{ __('Klasifikasi AI') }}
-                    </x-nav-link>
                 </div>
             </div>
 
@@ -77,7 +74,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.waste.index')" :active="request()->routeIs('admin.dashboard')">
-                {{ __('Kelola Sampah') }}
+                {{ __('Data Sampah') }}
             </x-responsive-nav-link>
         </div>
 

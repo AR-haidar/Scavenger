@@ -13,13 +13,13 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('user.home')" :active="request()->routeIs('user.home')">
+                    <x-nav-link :href="route('user.home')" :active="request()->routeIs(['user.home', 'user.sampah-*'])">
                         {{ __('Home') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('user.sampah.index')" :active="request()->routeIs('user.psampah')">
+                    <x-nav-link :href="route('user.sampah.index')" :active="request()->routeIs('user.sampah.*')">
                         {{ __('Explore') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('user.quiz.index')" :active="request()->routeIs('user.quiz')">
+                    <x-nav-link :href="route('user.quiz.index')" :active="request()->routeIs('user.quiz.*')">
                         {{ __('Quiz') }}
                     </x-nav-link>
                 </div>
@@ -82,7 +82,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('user.home')" :active="request()->routeIs('user.home')">
+            <x-responsive-nav-link :href="route('user.home')" :active="request()->routeIs(['user.home', 'user.sampah-organik', 'user.sampah-anorganik'])">
                 {{ __('Home') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('user.sampah.index')" :active="request()->routeIs('user.sampah')">

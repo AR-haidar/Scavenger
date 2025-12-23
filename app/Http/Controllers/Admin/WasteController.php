@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\WasteItem;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\AiClassifications;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class WasteController extends Controller
@@ -15,13 +17,13 @@ class WasteController extends Controller
      */
     public function index(Request $request)
     {
-        $query = WasteItem::query();
+        $query = AiClassifications::query();
 
         // Search
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
+                $q->where('waste_name', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%')
                     ->orWhere('composition', 'like', '%' . $search . '%')
                     ->orWhere('impact', 'like', '%' . $search . '%')
@@ -55,7 +57,7 @@ class WasteController extends Controller
     {
         // 1. Validasi input
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'waste_name' => 'required|string|max:255',
             'category' => 'required|in:organik,anorganik,b3',
             'description' => 'nullable|string',
             'composition' => 'nullable|string',
@@ -65,19 +67,30 @@ class WasteController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Handle image upload
+        // 2. Tambahkan User ID yang sedang login
+        $validated['user_id'] = Auth::id();
+
+        // 3. Handle image upload & Input Type
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $filename = Str::slug($validated['waste_name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
 
-            // Store in storage/app/public/images/waste
-            $path = $image->storeAs('images/waste', $filename, 'public');
+            // Simpan ke storage
+            $image->storeAs('images/ai_classification', $filename, 'public');
 
-            $validated['image_path'] = $path;
-            unset($validated['image']); // Remove 'image' key
+            // Set data untuk database
+            $validated['input_image_path'] = 'storage/images/ai_classification/' . $filename; // Simpan path relatif
+            $validated['input_type'] = 'image'; // Set tipe jadi image
+
+            unset($validated['image']); // Hapus object file image agar tidak error saat create
+        } else {
+            // Jika tidak ada gambar
+            $validated['input_type'] = 'text';
+            $validated['input_image_path'] = null;
         }
 
-        WasteItem::create($validated);
+        // 4. Simpan ke Database
+        AiClassifications::create($validated);
 
         return redirect()
             ->route('admin.waste.index')
@@ -89,7 +102,7 @@ class WasteController extends Controller
      */
     public function show($id)
     {
-        $waste = WasteItem::findOrFail($id);
+        $waste = AiClassifications::findOrFail($id);
 
         return view('admin.waste.show', compact('waste'));
     }
@@ -99,7 +112,7 @@ class WasteController extends Controller
      */
     public function edit($id)
     {
-        $waste = WasteItem::findOrFail($id);
+        $waste = AiClassifications::findOrFail($id);
 
         return view('admin.waste.edit', compact('waste'));
     }
@@ -109,10 +122,11 @@ class WasteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $waste = WasteItem::findOrFail($id);
+        $waste = AiClassifications::findOrFail($id);
 
+        // 1. Validasi (Ganti 'name' jadi 'waste_name' sesuai DB)
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'waste_name' => 'required|string|max:255',
             'category' => 'required|in:organik,anorganik,b3',
             'description' => 'nullable|string',
             'composition' => 'nullable|string',
@@ -122,23 +136,28 @@ class WasteController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Handle image upload
+        // 2. Handle Image Upload
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($waste->image_path) {
-                Storage::disk('public')->delete($waste->image_path);
+            // A. Hapus gambar lama jika ada
+            if ($waste->input_image_path && Storage::disk('public')->exists($waste->input_image_path)) {
+                Storage::disk('public')->delete($waste->input_image_path);
             }
 
+            // B. Upload gambar baru
             $image = $request->file('image');
-            $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $filename = Str::slug($validated['waste_name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
 
-            // Store in storage/app/public/images/waste
-            $path = $image->storeAs('images/waste', $filename, 'public');
+            // Simpan di folder yang SAMA dengan function store
+            $image->storeAs('images/ai_classification', $filename, 'public');
 
-            $validated['image_path'] = $path;
-            unset($validated['image']); // Remove 'image' key
+            // Update data path & tipe
+            $validated['input_image_path'] = 'storage/images/ai_classification/' . $filename;
+            $validated['input_type'] = 'image'; // Paksa jadi image karena admin baru upload foto
+
+            unset($validated['image']); // Hapus key image mentah
         }
 
+        // 3. Update Data
         $waste->update($validated);
 
         return redirect()
@@ -151,11 +170,11 @@ class WasteController extends Controller
      */
     public function destroy($id)
     {
-        $waste = WasteItem::findOrFail($id);
+        $waste = AiClassifications::findOrFail($id);
 
         // Delete image if exists
-        if ($waste->image_path && file_exists(public_path($waste->image_path))) {
-            unlink(public_path($waste->image_path));
+        if ($waste->input_image_path && file_exists(public_path($waste->input_image_path))) {
+            unlink(public_path($waste->input_image_path));
         }
 
         $waste->delete();

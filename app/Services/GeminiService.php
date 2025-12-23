@@ -22,57 +22,64 @@ class GeminiService
     public function analyzeText($userInput)
     {
         $prompt = "Kamu adalah ahli lingkungan hidup.
-        Tugas: Analisis sampah dari deskripsi user.
-        
-        Aturan Penting:
-        1. Jawab HANYA dalam format JSON valid.
-        2. Field 'processing_suggestion' dan 'environmental_impact' HARUS detail (minimal 3-5 kalimat atau 1 paragraf penuh).
-        3. Jelaskan langkah konkret untuk pengolahan.
-        4. Jelaskan dampak jangka panjang untuk lingkungan.
-        5. Gaya bahasa: Edukatif, menyemangati, mudah dipahami pelajar.
-        6. JANGAN pakai Markdown.
+            Tugas: Analisis sampah berdasarkan deskripsi dari pengguna.
 
-        Format JSON:
-        {
-          \"waste_name\": \"Nama sampah\",
-          \"category\": \"organik | anorganik | b3\",
-          \"processing_suggestion\": \"Penjelasan panjang 1 paragraf...\",
-          \"environmental_impact\": \"Penjelasan panjang 1 paragraf...\"
-        }
+            Aturan Penting:
+            1. Jawab HANYA dalam format JSON yang valid.
+            2. Field 'description', 'composition', 'handling', 'recycling', dan 'impact' WAJIB diisi dan masing-masing minimal 2-3 kalimat.
+            3. Jelaskan langkah konkret dan realistis untuk pengolahan sampah.
+            4. Gaya bahasa edukatif, menyemangati, dan mudah dipahami oleh pelajar.
+            5. JANGAN gunakan Markdown (```json).
 
-        Input: " . $userInput;
+            Format JSON yang HARUS diikuti:
+            {
+              \"waste_name\": \"Nama sampah\",
+              \"category\": \"organik | anorganik | b3\",
+              \"description\": \"Deskripsi singkat dan jelas tentang sampah tersebut.\",
+              \"composition\": \"Penjelasan bahan atau kandungan utama dari sampah.\",
+              \"handling\": \"Langkah penanganan awal yang aman dan tepat.\",
+              \"recycling\": \"Cara pengolahan atau daur ulang yang disarankan secara detail.\",
+              \"impact\": \"Dampak lingkungan jangka panjang jika sampah tidak dikelola dengan baik.\"
+            }
+
+            Input pengguna:
+            " . $userInput;
 
         return $this->sendRequest($prompt);
     }
 
     /**
      * Handle Image Analysis
+     * PERBAIKAN: Prompt disamakan dengan Text & Ditambah Timeout
      */
     public function analyzeImage($imagePath, $mimeType)
     {
         // Convert image to base64
         $imageData = base64_encode(file_get_contents($imagePath));
 
+        // Prompt Image DISAMAKAN dengan Prompt Text agar kuncinya cocok dengan Controller
         $prompt = "Kamu adalah ahli lingkungan hidup.
-        Tugas: Analisis sampah yang terlihat di gambar.
-        
-        Aturan Penting:
-        1. Jawab HANYA dalam format JSON valid.
-        2. Field 'processing_suggestion' dan 'environmental_impact' HARUS detail (minimal 3-5 kalimat atau 1 paragraf penuh).
-        3. Berikan tutorial singkat cara mengolahnya jika memungkinkan.
-        4. Jelaskan bahaya spesifik jika dibuang sembarangan.
-        5. Gaya bahasa: Edukatif, detail, tapi mudah dipahami.
-        6. JANGAN pakai Markdown.
+            Tugas: Analisis jenis sampah yang terlihat pada gambar.
+                
+            Aturan Penting:
+            1. Jawab HANYA dalam format JSON yang valid.
+            2. Field 'description', 'composition', 'handling', 'recycling', dan 'impact' WAJIB diisi detail (minimal 2-3 kalimat).
+            3. Berikan langkah konkret dan realistis.
+            4. Gaya bahasa edukatif, detail, dan mudah dipahami pelajar.
+            5. JANGAN gunakan Markdown (```json).
+                
+            Format JSON HARUS SAMA PERSIS seperti ini:
+            {
+              \"waste_name\": \"Nama sampah\",
+              \"category\": \"organik | anorganik | b3\",
+              \"description\": \"Deskripsi visual dan kondisi sampah di gambar.\",
+              \"composition\": \"Perkiraan bahan utama sampah tersebut.\",
+              \"handling\": \"Cara penanganan awal (misal: cuci dulu, pisahkan tutup, dll).\",
+              \"recycling\": \"Saran daur ulang atau pemanfaatan kembali.\",
+              \"impact\": \"Dampak jika sampah ini dibuang sembarangan ke alam.\"
+            }";
 
-        Format JSON:
-        {
-          \"waste_name\": \"Nama sampah\",
-          \"category\": \"organik | anorganik | b3\",
-          \"processing_suggestion\": \"Penjelasan panjang 1 paragraf...\",
-          \"environmental_impact\": \"Penjelasan panjang 1 paragraf...\"
-        }";
-
-        // Payload khusus Multimodal (Text + Image)
+        // Payload khusus Multimodal
         $payload = [
             'contents' => [
                 [
@@ -119,8 +126,8 @@ class GeminiService
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])
-            ->timeout(120)
-            ->post($this->baseUrl . '?key=' . $this->apiKey, $payload);
+                ->timeout(120)
+                ->post($this->baseUrl . '?key=' . $this->apiKey, $payload);
 
             if ($response->failed()) {
                 Log::error('Gemini API Error: ' . $response->body());
@@ -153,8 +160,8 @@ class GeminiService
         $decoded = json_decode($cleanText, true);
 
         return [
-            'data' => $decoded, // Hasil rapi (array)
-            'raw' => $text      // Hasil mentah (string) buat disimpan di DB
+            'data' => $decoded, 
+            'raw' => $text      
         ];
     }
 }

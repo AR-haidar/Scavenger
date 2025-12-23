@@ -52,7 +52,7 @@
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                                 Nama Sampah <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="name" id="name" value="{{ old('name', $waste->name) }}"
+                            <input type="text" name="waste_name" id="name" value="{{ old('waste_name', $waste->waste_name) }}"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('name') ? 'border-red-500' : 'border-gray-300' }}"
                                 placeholder="contoh: Botol Plastik PET" required>
                             @error('name')
@@ -160,15 +160,15 @@
                             <div class="mt-2 flex flex-col space-y-3">
 
                                 <!-- PREVIEW (Current or New) -->
-                                <div id="image-preview" class="{{ $waste->image_path ? '' : 'hidden' }}">
+                                <div id="image-preview" class="{{ $waste->input_image_path ? '' : 'hidden' }}">
                                     <img id="preview-img"
-                                        src="{{ $waste->image_path ? asset('storage/'. $waste->image_path) : '' }}"
+                                        src="{{ $waste->input_image_path ? asset($waste->input_image_path) : '' }}"
                                         alt="Preview"
                                         class="h-full w-full object-cover rounded-lg border border-gray-300 aspect-square">
                                 </div>
 
                                 <!-- Current Image Info -->
-                                @if ($waste->image_path)
+                                @if ($waste->input_image_path)
                                     <div class="flex items-center space-x-2 text-sm text-gray-600">
                                         <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
